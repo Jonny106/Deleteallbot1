@@ -21,7 +21,7 @@ from bot import (
 )
 from bot.bot import Bot
 from bot.helpers.delete_messages import mass_delete_messages
-
+from datetime import datetime, timedelta
 
 async def get_messages(
     client: Bot,
@@ -31,18 +31,25 @@ async def get_messages(
     filter_type_s: List[str]
 ):
     messages_to_delete = []
-    async for msg in client.iter_history(
+
+    # Create a datetime object for the current time
+    now = datetime.now()
+
+    # Subtract two minutes from the current time
+    two_minutes_ago = now - timedelta(minutes=4)
+
+    async for msg in client.get_chat_history(
         chat_id=chat_id,
-        limit=None
+        limit=None,
+        offset_date=two_minutes_ago
     ):
         if (
             min_message_id <= msg.id and
             max_message_id >= msg.id
         ):
-            if len(filter_type_s) > 0:
+            if filter_type_s:
                 for filter_type in filter_type_s:
-                    obj = getattr(msg, filter_type)
-                    if obj:
+                    if obj := getattr(msg, filter_type):
                         messages_to_delete.append(msg.id)
             else:
                 messages_to_delete.append(msg.id)

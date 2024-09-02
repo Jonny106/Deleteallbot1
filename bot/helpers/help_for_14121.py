@@ -29,7 +29,4 @@ async def check_perm(client: Bot, chat_id: int, user_id: int) -> bool:
     except UserNotParticipant:
         return False
     else:
-        if _a_.can_delete_messages:
-            return True
-        else:
-            return False
+        return bool(_a_.can_delete_messages)

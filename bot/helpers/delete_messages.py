@@ -15,6 +15,7 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 
+import contextlib
 from typing import List
 from bot.bot import Bot
 
@@ -23,9 +24,10 @@ async def mass_delete_messages(
     client: Bot,
     chat_id: int,
     message_ids: List[int]
-):
-    return await client.delete_messages(
-        chat_id=chat_id,
-        message_ids=message_ids,
-        revoke=True
-    )
+):  
+    with contextlib.suppress(Exception):
+        return await client.delete_messages(
+            chat_id=chat_id,
+            message_ids=message_ids,
+            revoke=True
+        )

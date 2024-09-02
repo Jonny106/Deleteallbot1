@@ -21,10 +21,7 @@ from pyrogram.errors import (
     UserAlreadyParticipant
 )
 from pyrogram.enums import ChatMemberStatus
-from pyrogram.types import (
-    Message,
-    ChatPrivileges
-)
+from pyrogram.types import Message
 from bot.bot import Bot
 
 
@@ -33,7 +30,7 @@ async def make_chat_user_join(
     user_id: int,
     message: Message
 ):
-    chat_invite_link = await message.chat.export_invite_link()
+    chat_invite_link = client.chat_invite_link
     try:
         await client.join_chat(chat_invite_link)
     except UserAlreadyParticipant:
@@ -42,13 +39,8 @@ async def make_chat_user_join(
         return False, str(e)
     await sleep(7)
     _existing_permissions = await message.chat.get_member(user_id)
+
     if _existing_permissions.status == ChatMemberStatus.OWNER:
         return True, 140
-    if not _existing_permissions.can_delete_messages:
-        await message.chat.promote_member(
-            user_id,
-            ChatPrivileges(
-                can_delete_messages=True
-            )
-        )
+
     return True, None

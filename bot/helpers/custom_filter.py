@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+
 # -*- coding: utf-8 -*-
 # (c) Shrimadhav U K
 # This program is free software: you can redistribute it and/or modify
@@ -10,7 +10,6 @@
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU Affero General Public License for more details.
-
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
@@ -20,7 +19,7 @@ from pyrogram.types import Message
 
 
 async def allowed_chat_filter_fn(_, __, m: Message):
-    return bool(m.chat and m.chat.type in [ChatType.CHANNEL, ChatType.SUPERGROUP])
+    return bool(m.chat and m.chat.type in [ChatType.CHANNEL, ChatType.SUPERGROUP, ChatType.GROUP])
 
 
 allowed_chat_filter = filters.create(allowed_chat_filter_fn)
