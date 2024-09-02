@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*
 # (c) Shrimadhav U K
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as published by
@@ -15,10 +15,7 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 from pyrogram import filters
-from pyrogram.types import (
-    Message,
-    LinkPreviewOptions
-)
+from pyrogram.types import Message
 from pyrogram.errors import (
     ChatAdminRequired
 )
@@ -48,7 +45,7 @@ from bot.helpers.get_messages import get_messages
 async def del_selective_command_fn(client: Bot, message: Message):
     try:
         status_message = await message.reply_text(
-            text=BEGINNING_SEL_DEL_MESSAGE
+            BEGINNING_SEL_DEL_MESSAGE
         )
     except ChatAdminRequired:
         status_message = None
@@ -61,12 +58,10 @@ async def del_selective_command_fn(client: Bot, message: Message):
     if not s__:
         if status_message:
             await status_message.edit_text(
-                text=IN_CORRECT_PERMISSIONS_MESSAGE.format(
+                IN_CORRECT_PERMISSIONS_MESSAGE.format(
                     nop
                 ),
-                link_preview_options=LinkPreviewOptions(
-                    is_disabled=True
-                ),
+                disable_web_page_preview=True
             )
         else:
             await message.delete()
@@ -83,7 +78,7 @@ async def del_selective_command_fn(client: Bot, message: Message):
     current_selections = AKTIFPERINTAH.get(message.chat.id)
     if len(flt_type) == 0 and not current_selections:
         if status_message:
-            await status_message.edit(text=NOT_USED_DEL_FROM_DEL_TO_MESSAGE)
+            await status_message.edit(NOT_USED_DEL_FROM_DEL_TO_MESSAGE)
         else:
             await message.delete()
         return
@@ -133,5 +128,5 @@ async def del_selective_command_fn(client: Bot, message: Message):
     # after process is completed
     if status_message:
         await status_message.edit_text(
-            text=THANK_YOU_MESSAGE
+            THANK_YOU_MESSAGE
         )

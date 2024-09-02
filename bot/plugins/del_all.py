@@ -19,92 +19,35 @@ from pyrogram.errors import (
     ChatAdminRequired
 )
 from pyrogram.raw.functions.channels import DeleteHistory
-from pyrogram.types import (
-    Message,
-    LinkPreviewOptions
-)
+from pyrogram.types import Message
 from bot import (
+    ADMINS,
+    AUTH_GROUP,
     BEGINNING_DEL_ALL_MESSAGE,
     DEL_ALL_COMMAND,
-    IN_CORRECT_PERMISSIONS_MESSAGE,
-    SHTL_BOT_HCAT_QO,
-    SHTL_USR_HCAT_QO,
-    THANK_YOU_MESSAGE
 )
 from bot.bot import Bot
 from bot.helpers.custom_filter import allowed_chat_filter
 from bot.helpers.get_messages import get_messages
-from bot.helpers.make_user_join_chat import make_chat_user_join
 
 
-@Bot.on_message(
-    filters.command(DEL_ALL_COMMAND) &
-    allowed_chat_filter
-)
+@Bot.on_message( filters.command(DEL_ALL_COMMAND) & allowed_chat_filter &  filters.chat(AUTH_GROUP) &  filters.user(ADMINS) )
 async def del_all_command_fn(client: Bot, message: Message):
     try:
         status_message = await message.reply_text(
-            text=BEGINNING_DEL_ALL_MESSAGE
+            BEGINNING_DEL_ALL_MESSAGE
         )
     except ChatAdminRequired:
         status_message = None
 
-    s__, nop = await make_chat_user_join(
+    await get_messages(
         client.USER,
-        client.USER_ID,
-        message
+        message.chat.id,
+        0,
+        status_message.id if status_message else message.id,
+        []
     )
-    if not s__:
-        if status_message:
-            await status_message.edit_text(
-                text=IN_CORRECT_PERMISSIONS_MESSAGE.format(
-                    nop
-                ),
-                link_preview_options=LinkPreviewOptions(
-                    is_disabled=True
-                ),
-            )
-        else:
-            await message.delete()
-        return
 
-    if (
-        # don't know a better way :\
-        str(message.chat.id).startswith("-100") and
-        # only creator of group can do this
-        s__ and
-        nop == 140
-    ):
-        await client.USER.send(
-            DeleteHistory(
-                for_everyone=True,
-                channel=(
-                    await client.USER.resolve_peer(
-                        message.chat.id
-                    )
-                ),
-                max_id=0
-            )
-        )
-
-    else:
-        await get_messages(
-            client.USER,
-            message.chat.id,
-            0,
-            status_message.id if status_message else message.id,
-            []
-        )
-
-        # leave the chat, after task is done
-        if SHTL_USR_HCAT_QO:
-            await client.USER.leave_chat(message.chat.id)
-        if SHTL_BOT_HCAT_QO:
-            await client.leave_chat(message.chat.id)
-
-    # edit with channel message ads,
-    # after process is completed
     if status_message:
-        await status_message.edit_text(
-            text=THANK_YOU_MESSAGE
-        )
+        await message.delete()
+        await status_message.delete()

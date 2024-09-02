@@ -15,10 +15,7 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 from pyrogram import filters
-from pyrogram.types import (
-    Message,
-    LinkPreviewOptions
-)
+from pyrogram.types import Message
 from bot import (
     START_COMMAND,
     START_MESSAGE
@@ -34,8 +31,6 @@ async def start_command_fn(_, message: Message):
     await message.reply_text(
         text=START_MESSAGE,
         quote=True,
-        link_preview_options=LinkPreviewOptions(
-            is_disabled=True
-        ),
+        disable_web_page_preview=True,
         disable_notification=True
     )
