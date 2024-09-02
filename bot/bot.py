@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+
 # -*- coding: utf-8 -*-
 # (c) Shrimadhav U K
 # This program is free software: you can redistribute it and/or modify
@@ -16,14 +17,22 @@
 
 """ MtProto Bot """
 
+import asyncio
 from pyrogram import (
     Client,
     __version__
 )
 from pyrogram.enums import ParseMode
+from aiohttp import web
+from bot.helpers.task import delete_task
+from bot.plugins import web_server
+
 from . import (
     API_HASH,
     APP_ID,
+    AUTH_GROUP,
+    AUTO_DELETE_TIME,
+    DEL_ALL_COMMAND,
     LOGGER,
     TG_BOT_SESSION,
     TG_BOT_TOKEN,
@@ -68,8 +77,20 @@ class Bot(Client):
         # hack to get the entities in-memory
         await self.USER.send_message(
             usr_bot_me.username,
-            "join https://t.me/SpEcHlDe/857"
+            "Bot started"
         )
+
+        app = web.AppRunner(await web_server())
+        await app.setup()
+        bind_address = "0.0.0.0"
+        await web.TCPSite(app, bind_address, 8080).start()
+
+
+        asyncio.create_task(delete_task(self.USER))
+
+        # while AUTO_DELETE_TIME and AUTH_GROUP:
+        #     await asyncio.sleep(AUTO_DELETE_TIME)
+        #     await self.USER.send_message(AUTH_GROUP, f"/{DEL_ALL_COMMAND}")
 
     async def stop(self, *args):
         await super().stop()

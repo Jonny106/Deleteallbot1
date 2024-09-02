@@ -56,7 +56,7 @@ AKTIFPERINTAH = {}
 # should the user / bot leave the chat after finishing tasks
 SHTL_USR_HCAT_QO = bool(get_config("SHTL_USR_HCAT_QO", False))
 SHTL_BOT_HCAT_QO = bool(get_config("SHTL_BOT_HCAT_QO", False))
-
+ADMINS = [int(i.strip()) for i in get_config("ADMINS", []).split(",")] if get_config("ADMINS", []) else []
 
 logging.basicConfig(
     level=logging.INFO,
@@ -80,15 +80,11 @@ def LOGGER(name: str) -> logging.Logger:
 
 
 REQD_PERMISSIONS = "https://t.me/SpEcHlDe/857"
-GIT_REPO_LINK = "https://github.com/SpEcHiDe/DeleteMessagesRoBot"
+GIT_REPO_LINK = "https://github.com/"
 """ strings to be used in the bot """
 START_MESSAGE = get_config("START_MESSAGE", (
     "I'm a bot that can delete <s>all</s> "
     "your channel or supergroup messages. "
-    "\n\n"
-    f"To use me: read 👉 {REQD_PERMISSIONS} 👈"
-    "\n\n"
-    f"In case of issues, contact 👉 {GIT_REPO_LINK} 👈"
 ))
 START_COMMAND = get_config("START_COMMAND", "start")
 DEL_ALL_COMMAND = get_config("DEL_ALL_COMMAND", "delall")
@@ -128,11 +124,10 @@ TL_FILE_TYPES = (
     "video",
     "video_note",
     "voice",
-    # "contact",
-    # "dice",
-    # "poll",
-    # "location",
-    # "venue",
     "sticker",
     "text"
 )
+
+AUTO_DELETE_TIME = int(get_config("AUTO_DELETE_TIME", 0))
+AUTH_GROUP = [int(i.strip()) for i in get_config("AUTH_GROUP", []).split(",")] if get_config("AUTH_GROUP", []) else []
+print(AUTH_GROUP)
