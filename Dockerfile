@@ -6,7 +6,7 @@ RUN apt-get update && \
     apt-get install -y ffmpeg libsm6 libxext6
 RUN apt-get install build-essential python3-dev -y
 # Set the working directory
-WORKDIR /app
+WORKDIR /Deleteallbot1
 
 # Copy the requirements file to the working directory
 COPY . .
@@ -15,4 +15,4 @@ COPY . .
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Set the command to run the Python script
-CMD ["python", "bot/bot.py"]
+CMD [ "python", "main.py" ]
